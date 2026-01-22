@@ -1,21 +1,81 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Phantom AI</title>
-<link rel="stylesheet" href="style.css">
+    <!-- =====================================================
+         PHANTOM AI - INDEX
+         Author: ChatGPT
+         ===================================================== -->
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>Phantom AI</title>
+
+    <!-- ===================== FONTS ===================== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- ===================== CSS ===================== -->
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
 
-<div id="app">
-    <div id="messages"></div>
+    <!-- ===================== APP ROOT ===================== -->
+    <div id="app">
 
-    <div id="inputBar">
-        <input id="input" placeholder="Envoyer un message..." autocomplete="off">
-        <button id="send">➤</button>
+        <!-- ===================== HEADER ===================== -->
+        <header>
+            <div class="logo">
+                <!-- LOGO TEMP (remplacé plus tard par SVG) -->
+                <img src="logo.png" alt="Phantom AI Logo">
+                <span>Phantom AI</span>
+            </div>
+
+            <div id="status">
+                🟢 En ligne
+            </div>
+        </header>
+
+        <!-- ===================== CHAT ===================== -->
+        <div id="chat-container">
+
+            <!-- MESSAGE AI INITIAL -->
+            <div class="message ai">
+                <div class="bubble">
+Bonjour.  
+Je suis <b>Phantom AI</b> 🤖  
+Pose-moi une question.
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ===================== INPUT BAR ===================== -->
+        <div id="input-bar">
+            <div id="input-wrapper">
+
+                <textarea
+                    id="userInput"
+                    placeholder="Écris un message à Phantom AI..."
+                    rows="1"
+                ></textarea>
+
+                <button id="sendBtn">
+                    ➤
+                </button>
+
+            </div>
+        </div>
+
+        <!-- ===================== FOOTER ===================== -->
+        <footer>
+            Phantom AI • Powered by ChatGPT • Project by Shadow
+        </footer>
+
     </div>
-</div>
 
-<script src="app.js"></script>
+    <!-- ===================== JS ===================== -->
+    <script src="app.js"></script>
+
 </body>
 </html>
