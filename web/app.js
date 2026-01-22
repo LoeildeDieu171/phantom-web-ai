@@ -1,16 +1,17 @@
-const input = document.getElementById("userInput");
-const sendBtn = document.getElementById("sendBtn");
+const input = document.getElementById("input");
+const sendBtn = document.getElementById("send");
 const messages = document.getElementById("messages");
 
 let locked = false;
 
-function bubble(type) {
-    const msg = document.createElement("div");
-    msg.className = `message ${type}`;
+function add(type, text = "") {
+    const m = document.createElement("div");
+    m.className = "msg " + type;
     const b = document.createElement("div");
     b.className = "bubble";
-    msg.appendChild(b);
-    messages.appendChild(msg);
+    b.textContent = text;
+    m.appendChild(b);
+    messages.appendChild(m);
     messages.scrollTop = messages.scrollHeight;
     return b;
 }
@@ -19,7 +20,7 @@ function type(el, text) {
     el.textContent = "";
     let i = 0;
     const t = setInterval(() => {
-        el.textContent += text[i++];
+        el.textContent += text[i++] || "";
         messages.scrollTop = messages.scrollHeight;
         if (i >= text.length) clearInterval(t);
     }, 15);
@@ -29,33 +30,33 @@ async function send() {
     if (locked || !input.value.trim()) return;
 
     locked = true;
-    sendBtn.disabled = true;
     input.disabled = true;
+    sendBtn.disabled = true;
 
     const text = input.value;
     input.value = "";
 
-    bubble("user").textContent = text;
-    const ai = bubble("ai");
+    add("user", text);
+    const aiBubble = add("ai");
 
     try {
         const r = await fetch("/api/chat", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({message: text})
+            body: JSON.stringify({ message: text })
         });
 
         const d = await r.json();
-        type(ai, d.reply || "Réponse vide.");
+        type(aiBubble, d.reply || "Réponse vide.");
 
     } catch (e) {
-        type(ai, "Erreur JS : " + e.message);
+        type(aiBubble, "Erreur JS : " + e.message);
     }
 
     setTimeout(() => {
         locked = false;
-        sendBtn.disabled = false;
         input.disabled = false;
+        sendBtn.disabled = false;
         input.focus();
     }, 300);
 }
