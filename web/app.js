@@ -1,11 +1,10 @@
 const chat = document.getElementById("chat");
 const input = document.getElementById("messageInput");
 const sendBtn = document.getElementById("sendBtn");
-const form = document.getElementById("chatForm");
 
 let aiBusy = false;
 
-/* CREATE MESSAGE */
+/* ADD MESSAGE */
 function addMessage(text, type) {
   const div = document.createElement("div");
   div.className = `message ${type}`;
@@ -15,15 +14,16 @@ function addMessage(text, type) {
   return div;
 }
 
-/* TYPE ANIMATION */
-function typeText(el, text, speed = 20) {
-  el.textContent = "";
+/* TYPE EFFECT */
+function typeText(element, text, speed = 25) {
+  element.textContent = "";
   let i = 0;
-  const timer = setInterval(() => {
-    el.textContent += text[i];
+
+  const interval = setInterval(() => {
+    element.textContent += text[i];
     chat.scrollTop = chat.scrollHeight;
     i++;
-    if (i >= text.length) clearInterval(timer);
+    if (i >= text.length) clearInterval(interval);
   }, speed);
 }
 
@@ -42,26 +42,23 @@ function sendMessage() {
   const aiBubble = addMessage("", "ai");
 
   setTimeout(() => {
-    const reply =
-      "Je réponds maintenant correctement. Le message s’affiche, l’écriture est animée et tu ne peux pas spam pendant que je parle.";
+    const response =
+      "Je suis Phantom AI. Ceci est une réponse générée avec un vrai effet d’écriture progressive, comme ChatGPT.";
 
-    typeText(aiBubble, reply);
+    typeText(aiBubble, response);
 
     setTimeout(() => {
       aiBusy = false;
       input.disabled = false;
       sendBtn.disabled = false;
       input.focus();
-    }, reply.length * 20 + 300);
-  }, 500);
+    }, response.length * 25 + 300);
+  }, 600);
 }
 
 /* EVENTS */
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  sendMessage();
-});
+sendBtn.addEventListener("click", sendMessage);
 
-window.onload = () => {
-  input.focus();
-};
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendMessage();
+});
