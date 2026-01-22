@@ -4,80 +4,63 @@ const messages = document.getElementById("messages");
 
 let locked = false;
 
-/* CREATE MESSAGE */
-function createBubble(type) {
+function bubble(type) {
     const msg = document.createElement("div");
     msg.className = `message ${type}`;
-
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-
-    msg.appendChild(bubble);
+    const b = document.createElement("div");
+    b.className = "bubble";
+    msg.appendChild(b);
     messages.appendChild(msg);
     messages.scrollTop = messages.scrollHeight;
-
-    return bubble;
+    return b;
 }
 
-/* LOCK INPUT */
-function lock(state) {
-    locked = state;
-    input.disabled = state;
-    sendBtn.disabled = state;
-    input.placeholder = state
-        ? "Phantom AI écrit..."
-        : "Envoyer un message...";
-}
-
-/* TYPING EFFECT */
-function typeWriter(element, text, speed = 16) {
-    element.textContent = "";
+function type(el, text) {
+    el.textContent = "";
     let i = 0;
-
-    const interval = setInterval(() => {
-        element.textContent += text.charAt(i);
-        i++;
+    const t = setInterval(() => {
+        el.textContent += text[i++];
         messages.scrollTop = messages.scrollHeight;
-
-        if (i >= text.length) clearInterval(interval);
-    }, speed);
+        if (i >= text.length) clearInterval(t);
+    }, 15);
 }
 
-/* SEND MESSAGE */
-async function sendMessage() {
-    if (!input.value.trim() || locked) return;
+async function send() {
+    if (locked || !input.value.trim()) return;
 
-    const userText = input.value;
+    locked = true;
+    sendBtn.disabled = true;
+    input.disabled = true;
+
+    const text = input.value;
     input.value = "";
 
-    createBubble("user").textContent = userText;
-    const aiBubble = createBubble("ai");
-
-    lock(true);
+    bubble("user").textContent = text;
+    const ai = bubble("ai");
 
     try {
-        const res = await fetch("/api/chat", {
+        const r = await fetch("/api/chat", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: userText })
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({message: text})
         });
 
-        const data = await res.json();
-        typeWriter(aiBubble, data.reply);
+        const d = await r.json();
+        type(ai, d.reply || "Réponse vide.");
 
-    } catch {
-        aiBubble.textContent = "Erreur serveur.";
+    } catch (e) {
+        type(ai, "Erreur JS : " + e.message);
     }
 
-    setTimeout(() => lock(false), 300);
+    setTimeout(() => {
+        locked = false;
+        sendBtn.disabled = false;
+        input.disabled = false;
+        input.focus();
+    }, 300);
 }
 
-/* EVENTS */
-sendBtn.onclick = sendMessage;
-
+sendBtn.onclick = send;
 input.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        sendMessage();
-    }
+    if (e.key === "Enter") send();
 });
