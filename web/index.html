@@ -2,21 +2,42 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Phantom Web AI</title>
-
-    <!-- CSS (CHEMIN RELATIF, TRÈS IMPORTANT) -->
+    <title>Phantom AI</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1>👁 Phantom Web AI</h1>
-        <p>Site déployé avec succès.</p>
+<div class="app">
 
-        <button id="testBtn">Tester JS</button>
-    </div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2>Phantom AI</h2>
+        <button class="new-chat">+ New chat</button>
+        <div class="history">
+            <div class="chat-item active">Conversation 1</div>
+            <div class="chat-item">Conversation 2</div>
+        </div>
+    </aside>
 
-    <!-- JS (CHEMIN RELATIF) -->
-    <script src="app.js"></script>
+    <!-- MAIN -->
+    <main class="main">
+        <div class="messages" id="messages">
+            <div class="message ai">
+                <div class="bubble">
+                    Salut 👋 Je suis Phantom AI.
+                </div>
+            </div>
+        </div>
+
+        <!-- INPUT -->
+        <div class="input-bar">
+            <input id="userInput" type="text" placeholder="Envoyer un message..." />
+            <button id="sendBtn">➤</button>
+        </div>
+    </main>
+
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
