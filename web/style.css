@@ -5,25 +5,25 @@ body {
     font-family: Segoe UI, sans-serif;
 }
 
-.main {
+#app {
     display: flex;
     flex-direction: column;
     height: 100vh;
 }
 
-.messages {
+#messages {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
 }
 
-.message {
+.msg {
     margin-bottom: 15px;
     display: flex;
 }
 
-.message.user { justify-content: flex-end; }
-.message.ai { justify-content: flex-start; }
+.msg.user { justify-content: flex-end; }
+.msg.ai { justify-content: flex-start; }
 
 .bubble {
     max-width: 70%;
@@ -32,22 +32,22 @@ body {
     white-space: pre-wrap;
 }
 
-.message.user .bubble {
+.user .bubble {
     background: #007aff;
     color: white;
 }
 
-.message.ai .bubble {
+.ai .bubble {
     background: #1e1e1e;
 }
 
-.input-bar {
+#inputBar {
     display: flex;
     padding: 15px;
     border-top: 1px solid #222;
 }
 
-input {
+#input {
     flex: 1;
     padding: 12px;
     background: #1e1e1e;
@@ -56,7 +56,7 @@ input {
     color: white;
 }
 
-button {
+#send {
     margin-left: 10px;
     padding: 0 18px;
     border-radius: 10px;
