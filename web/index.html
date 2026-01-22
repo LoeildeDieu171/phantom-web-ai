@@ -9,29 +9,23 @@
 
 <div class="app">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <h2>Phantom AI</h2>
-        <button class="new-chat">+ New chat</button>
-        <div class="history">
-            <div class="chat-item active">Conversation 1</div>
-            <div class="chat-item">Conversation 2</div>
-        </div>
+        <button class="new-chat">+ Nouveau chat</button>
     </aside>
 
-    <!-- MAIN -->
     <main class="main">
-        <div class="messages" id="messages">
-            <div class="message ai">
-                <div class="bubble">
-                    Salut 👋 Je suis Phantom AI.
-                </div>
-            </div>
-        </div>
+        <!-- ZONE MESSAGES (VIDE AU DÉPART) -->
+        <div class="messages" id="messages"></div>
 
         <!-- INPUT -->
         <div class="input-bar">
-            <input id="userInput" type="text" placeholder="Envoyer un message..." />
+            <input
+                id="userInput"
+                type="text"
+                placeholder="Envoyer un message..."
+                autocomplete="off"
+            />
             <button id="sendBtn">➤</button>
         </div>
     </main>
