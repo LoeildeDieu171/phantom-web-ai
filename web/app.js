@@ -1,33 +1,33 @@
 const chat = document.getElementById("chat");
 const input = document.getElementById("messageInput");
 const sendBtn = document.getElementById("sendBtn");
+const form = document.getElementById("chatForm");
 
 let aiBusy = false;
 
-/* ADD MESSAGE */
+/* CREATE MESSAGE */
 function addMessage(text, type) {
   const div = document.createElement("div");
-  div.classList.add("message", type);
+  div.className = `message ${type}`;
   div.textContent = text;
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
   return div;
 }
 
-/* TYPE EFFECT */
-function typeText(element, text, speed = 25) {
-  element.textContent = "";
+/* TYPE ANIMATION */
+function typeText(el, text, speed = 20) {
+  el.textContent = "";
   let i = 0;
-
-  const interval = setInterval(() => {
-    element.textContent += text[i];
-    i++;
+  const timer = setInterval(() => {
+    el.textContent += text[i];
     chat.scrollTop = chat.scrollHeight;
-    if (i >= text.length) clearInterval(interval);
+    i++;
+    if (i >= text.length) clearInterval(timer);
   }, speed);
 }
 
-/* SEND */
+/* SEND MESSAGE */
 function sendMessage() {
   const text = input.value.trim();
   if (!text || aiBusy) return;
@@ -41,23 +41,27 @@ function sendMessage() {
 
   const aiBubble = addMessage("", "ai");
 
-  // SIMULATION IA (à remplacer par fetch API plus tard)
   setTimeout(() => {
-    const response =
-      "Je suis Phantom AI. Ceci est une réponse générée avec un effet d’écriture progressive, comme ChatGPT.";
+    const reply =
+      "Je réponds maintenant correctement. Le message s’affiche, l’écriture est animée et tu ne peux pas spam pendant que je parle.";
 
-    typeText(aiBubble, response);
+    typeText(aiBubble, reply);
 
     setTimeout(() => {
       aiBusy = false;
       input.disabled = false;
       sendBtn.disabled = false;
       input.focus();
-    }, response.length * 25 + 300);
-  }, 600);
+    }, reply.length * 20 + 300);
+  }, 500);
 }
 
-sendBtn.addEventListener("click", sendMessage);
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") sendMessage();
+/* EVENTS */
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  sendMessage();
 });
+
+window.onload = () => {
+  input.focus();
+};
