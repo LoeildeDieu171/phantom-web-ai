@@ -1,44 +1,39 @@
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-import subprocess
+from pydantic import BaseModel
+from dotenv import load_dotenv
+import openai
+import os
+
+load_dotenv()
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = FastAPI()
-app.mount("/web", StaticFiles(directory="web"), name="web")
 
-@app.get("/")
-def index():
-    return FileResponse("web/index.html")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.post("/ask")
-async def ask(data: dict):
-    question = data.get("question", "").strip()
+app.mount("/", StaticFiles(directory="web", html=True), name="web")
 
-    def stream():
-        process = subprocess.Popen(
-            ["ollama", "run", "llama3"],
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            encoding="utf-8"
-        )
+class Message(BaseModel):
+    message: str
 
-        prompt = f"""
-Tu es PHANTOM AI.
-Réponds naturellement, clairement.
-Tu sais tout ce qu’un LLM sait.
-Tu écris du code si demandé.
+@app.post("/api/chat")
+async def chat(msg: Message):
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "Tu es Phantom AI, un assistant sombre, intelligent et calme."},
+            {"role": "user", "content": msg.message}
+        ]
+    )
 
-Question :
-{question}
-
-Réponse :
-"""
-        process.stdin.write(prompt)
-        process.stdin.close()
-
-        for line in process.stdout:
-            yield line
-
-    return StreamingResponse(stream(), media_type="text/plain")
+    return {
+        "reply": response.choices[0].message.content
+    }
