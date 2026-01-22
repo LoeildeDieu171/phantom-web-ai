@@ -8,28 +8,14 @@
 <body>
 
 <div class="app">
-
-    <aside class="sidebar">
-        <h2>Phantom AI</h2>
-        <button class="new-chat">+ Nouveau chat</button>
-    </aside>
-
     <main class="main">
-        <!-- ZONE MESSAGES (VIDE AU DÉPART) -->
-        <div class="messages" id="messages"></div>
+        <div id="messages" class="messages"></div>
 
-        <!-- INPUT -->
         <div class="input-bar">
-            <input
-                id="userInput"
-                type="text"
-                placeholder="Envoyer un message..."
-                autocomplete="off"
-            />
+            <input id="userInput" placeholder="Envoyer un message..." autocomplete="off">
             <button id="sendBtn">➤</button>
         </div>
     </main>
-
 </div>
 
 <script src="app.js"></script>
