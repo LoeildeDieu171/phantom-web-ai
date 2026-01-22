@@ -2,63 +2,58 @@ const input = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
 const messages = document.getElementById("messages");
 
-let isThinking = false;
+let locked = false;
 
-/* ===== Utils ===== */
-
-function addMessage(type) {
+/* CREATE MESSAGE */
+function createBubble(type) {
     const msg = document.createElement("div");
     msg.className = `message ${type}`;
+
     const bubble = document.createElement("div");
     bubble.className = "bubble";
+
     msg.appendChild(bubble);
     messages.appendChild(msg);
     messages.scrollTop = messages.scrollHeight;
+
     return bubble;
 }
 
-function lockInput(state) {
-    isThinking = state;
+/* LOCK INPUT */
+function lock(state) {
+    locked = state;
     input.disabled = state;
     sendBtn.disabled = state;
     input.placeholder = state
-        ? "Phantom AI réfléchit..."
+        ? "Phantom AI écrit..."
         : "Envoyer un message...";
 }
 
-/* ===== Typing Effect ===== */
+/* TYPING EFFECT */
+function typeWriter(element, text, speed = 16) {
+    element.textContent = "";
+    let i = 0;
 
-function typeText(element, text, speed = 18) {
-    return new Promise(resolve => {
-        let i = 0;
-        const interval = setInterval(() => {
-            element.textContent += text.charAt(i);
-            i++;
-            messages.scrollTop = messages.scrollHeight;
-            if (i >= text.length) {
-                clearInterval(interval);
-                resolve();
-            }
-        }, speed);
-    });
+    const interval = setInterval(() => {
+        element.textContent += text.charAt(i);
+        i++;
+        messages.scrollTop = messages.scrollHeight;
+
+        if (i >= text.length) clearInterval(interval);
+    }, speed);
 }
 
-/* ===== Main Send ===== */
-
+/* SEND MESSAGE */
 async function sendMessage() {
-    if (!input.value.trim() || isThinking) return;
+    if (!input.value.trim() || locked) return;
 
-    const userText = input.value.trim();
+    const userText = input.value;
     input.value = "";
 
-    // USER MESSAGE
-    const userBubble = addMessage("user");
-    userBubble.textContent = userText;
+    createBubble("user").textContent = userText;
+    const aiBubble = createBubble("ai");
 
-    // AI MESSAGE (EMPTY BUBBLE)
-    const aiBubble = addMessage("ai");
-
-    lockInput(true);
+    lock(true);
 
     try {
         const res = await fetch("/api/chat", {
@@ -68,23 +63,20 @@ async function sendMessage() {
         });
 
         const data = await res.json();
+        typeWriter(aiBubble, data.reply);
 
-        // Typing animation
-        await typeText(aiBubble, data.reply);
-
-    } catch (err) {
-        aiBubble.textContent = "❌ Erreur serveur.";
+    } catch {
+        aiBubble.textContent = "Erreur serveur.";
     }
 
-    lockInput(false);
+    setTimeout(() => lock(false), 300);
 }
 
-/* ===== Events ===== */
-
+/* EVENTS */
 sendBtn.onclick = sendMessage;
 
 input.addEventListener("keydown", e => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter") {
         e.preventDefault();
         sendMessage();
     }
