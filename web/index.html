@@ -1,32 +1,22 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>PHANTOM AI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/web/style.css">
+    <meta charset="UTF-8">
+    <title>Phantom Web AI</title>
+
+    <!-- CSS (CHEMIN RELATIF, TRÈS IMPORTANT) -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="app">
+    <div class="container">
+        <h1>👁 Phantom Web AI</h1>
+        <p>Site déployé avec succès.</p>
 
-  <aside class="sidebar">
-    <h2>PHANTOM AI</h2>
-    <button id="newChat">+ Nouveau chat</button>
-    <div id="chatList"></div>
-  </aside>
-
-  <main class="chat-area">
-    <div id="chat"></div>
-
-    <div class="input-area">
-      <textarea id="question" placeholder="Écris ton message..."></textarea>
-      <button id="send">Envoyer</button>
+        <button id="testBtn">Tester JS</button>
     </div>
-  </main>
 
-</div>
-
-<script src="/web/app.js"></script>
+    <!-- JS (CHEMIN RELATIF) -->
+    <script src="app.js"></script>
 </body>
 </html>
