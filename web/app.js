@@ -4,7 +4,6 @@ const sendBtn = document.getElementById("sendBtn");
 
 let aiBusy = false;
 
-/* ADD MESSAGE */
 function addMessage(text, type) {
   const div = document.createElement("div");
   div.className = `message ${type}`;
@@ -14,8 +13,7 @@ function addMessage(text, type) {
   return div;
 }
 
-/* TYPE EFFECT */
-function typeText(element, text, speed = 25) {
+function typeText(element, text, speed = 22) {
   element.textContent = "";
   let i = 0;
 
@@ -27,8 +25,7 @@ function typeText(element, text, speed = 25) {
   }, speed);
 }
 
-/* SEND MESSAGE */
-function sendMessage() {
+async function sendMessage() {
   const text = input.value.trim();
   if (!text || aiBusy) return;
 
@@ -38,27 +35,30 @@ function sendMessage() {
   sendBtn.disabled = true;
 
   addMessage(text, "user");
-
   const aiBubble = addMessage("", "ai");
 
+  try {
+    const res = await fetch("http://localhost:8000/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    });
+
+    const data = await res.json();
+    typeText(aiBubble, data.response);
+  } catch (e) {
+    aiBubble.textContent = "Erreur serveur.";
+  }
+
   setTimeout(() => {
-    const response =
-      "Je suis Phantom AI. Ceci est une réponse générée avec un vrai effet d’écriture progressive, comme ChatGPT.";
-
-    typeText(aiBubble, response);
-
-    setTimeout(() => {
-      aiBusy = false;
-      input.disabled = false;
-      sendBtn.disabled = false;
-      input.focus();
-    }, response.length * 25 + 300);
-  }, 600);
+    aiBusy = false;
+    input.disabled = false;
+    sendBtn.disabled = false;
+    input.focus();
+  }, 500);
 }
 
-/* EVENTS */
 sendBtn.addEventListener("click", sendMessage);
-
-input.addEventListener("keydown", (e) => {
+input.addEventListener("keydown", e => {
   if (e.key === "Enter") sendMessage();
 });
